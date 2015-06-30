@@ -1,14 +1,14 @@
-#ifndef MYUDP_H
-#define MYUDP_H
+#ifndef UDPCLIENT_H
+#define UDPCLIENT_H
 
 #include <QObject>
 #include <QUdpSocket>
 
-class MyUDP : public QObject
+class UDPClient : public QObject
 {
     Q_OBJECT
 public:
-    explicit MyUDP(QObject *parent = 0);
+    explicit UDPClient(QObject *parent = 0);
     void sendData(const QString string, const QString remoteIp, const int port);
     void connectNet(const QString string, const QString remoteIp, const int port);
     void disconnectNet(const QString string, const QString remoteIp, const int port);
@@ -22,5 +22,5 @@ private:
     QUdpSocket *socket;
 };
 
-#endif // MYUDP_H
+#endif // UDPCLIENT_H
 

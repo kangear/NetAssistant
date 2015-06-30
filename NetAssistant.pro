@@ -8,18 +8,18 @@ QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = Net
+TARGET = NetAssistant
 TEMPLATE = app
 
 QMAKE_CXXFLAGS += -std=c++0x
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    myudp.cpp \
+    udpclient.cpp \
     commonhelper.cpp
 
 HEADERS  += mainwindow.h \
-    myudp.h \
+    udpclient.h \
     commonhelper.h
 
 FORMS    += mainwindow.ui

@@ -1,7 +1,7 @@
-#include "myudp.h"
+#include "udpclient.h"
 #include <QMessageBox>
 
-MyUDP::MyUDP(QObject *parent) :
+UDPClient::UDPClient(QObject *parent) :
     QObject(parent)
 {
     qDebug("%s", __func__);
@@ -17,7 +17,7 @@ MyUDP::MyUDP(QObject *parent) :
  * @brief MyUDP::connection_error
  * @param err
  */
-void MyUDP::connection_error(QAbstractSocket::SocketError err)
+void UDPClient::connection_error(QAbstractSocket::SocketError err)
 {
     qDebug("%s", __func__);
     switch(err){
@@ -42,7 +42,7 @@ void MyUDP::connection_error(QAbstractSocket::SocketError err)
  * @param remoteIp 目标IP地址
  * @param port     目标端口号
  */
-void MyUDP::sendData(const QString string, const QString remoteIp, const int port)
+void UDPClient::sendData(const QString string, const QString remoteIp, const int port)
 {
     qDebug("%s %d", __func__, __LINE__);
     if(socket == NULL)
@@ -54,7 +54,7 @@ void MyUDP::sendData(const QString string, const QString remoteIp, const int por
 }
 
 
-void MyUDP::connectNet(const QString string, const QString remoteIp, const int port)
+void UDPClient::connectNet(const QString string, const QString remoteIp, const int port)
 {
     qDebug("%s", __func__);
     if(socket == NULL) {
@@ -64,7 +64,7 @@ void MyUDP::connectNet(const QString string, const QString remoteIp, const int p
     }
 }
 
-void MyUDP::disconnectNet(const QString string, const QString remoteIp, const int port)
+void UDPClient::disconnectNet(const QString string, const QString remoteIp, const int port)
 {
     qDebug("%s", __func__);
     if(socket != NULL) {
@@ -73,7 +73,7 @@ void MyUDP::disconnectNet(const QString string, const QString remoteIp, const in
     }
 }
 
-void MyUDP::readyRead()
+void UDPClient::readyRead()
 {
     qDebug("%s", __func__);
     QByteArray Buffer;

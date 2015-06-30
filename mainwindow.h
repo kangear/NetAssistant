@@ -5,7 +5,7 @@
 #include <QUdpSocket>
 #include <QLabel>
 #include <QPushButton>
-#include "myudp.h"
+#include "udpclient.h"
 #include "commonhelper.h"
 
 namespace Ui {
@@ -39,7 +39,7 @@ private:
     void connectNet();
     void disConnectNet();
     bool isConnect;
-    MyUDP client;
+    UDPClient client;
     /** 工具类 */
     CommonHelper chelper;
     /** 状态标签 */

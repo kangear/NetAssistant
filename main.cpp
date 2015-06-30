@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include <QApplication>
-#include "myudp.h"
+#include "udpclient.h"
 
 int main(int argc, char *argv[])
 {

@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QUdpSocket>
-#include "myudp.h"
+#include "udpclient.h"
 #include <QLabel>
 #include <QDate>
 #include "commonhelper.h"
@@ -91,7 +91,7 @@ void MainWindow::connectNet()
 
     mRemoteIp = ui->remoteIP_lineEdit->text();
     mRemotePort = ui->remoteport_spinBox->text().toInt();
-    updateStateBar("UDP通信 " + mRemoteIp + ":" + mRemotePort,
+    updateStateBar("UDP通信 " + mRemoteIp + ":" + QString().number(mRemotePort),
                    QVariant(QVariant::Int), QVariant(QVariant::Int));
 
     // No.1
