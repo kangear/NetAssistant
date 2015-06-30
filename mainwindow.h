@@ -61,6 +61,7 @@ private:
     int mLocalPort;
 
     void doSettings(bool isWrite);
+    void init();
 };
 
 #endif // MAINWINDOW_H

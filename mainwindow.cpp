@@ -48,17 +48,16 @@ MainWindow::MainWindow(QWidget *parent) :
     receiveLabel->setFrameShape(QFrame::WinPanel); // 设置标签形状
     receiveLabel->setFrameShadow(QFrame::Sunken); // 设置标签阴影
     ui->statusBar->addWidget(receiveLabel);
-    receiveLabel->setText(tr("收到:10"));
     receiveLabel->setAlignment(Qt::AlignHCenter);
 
-    // 状态栏
+    // 发送数量
     sendLabel = new QLabel;
     sendLabel->setMinimumSize(150, 20); // 设置标签最小大小
     sendLabel->setFrameShape(QFrame::WinPanel); // 设置标签形状
     sendLabel->setFrameShadow(QFrame::Sunken); // 设置标签阴影
     ui->statusBar->addWidget(sendLabel);
-    sendLabel->setText(tr("发送:10"));
     sendLabel->setAlignment(Qt::AlignHCenter);
+    updateStateBar(QString(), 0, 0);
 
     // 计数器清零 button
     clearCounterButton = new QPushButton();
@@ -81,7 +80,7 @@ MainWindow::MainWindow(QWidget *parent) :
             SIGNAL(updateState(QString, QVariant, QVariant)),
             this, SLOT(updateStateBar(QString, QVariant, QVariant)));
 
-    disConnectNet();
+    init();
 
     mReceiveNum = mSendNum = 0;
 }
@@ -158,6 +157,37 @@ void MainWindow::updateStateBar(QString state, QVariant inNum, QVariant outNum)
     }
 
 }
+
+/**
+ * 断开UDP时调用该函数
+ * @brief MainWindow::init
+ */
+void MainWindow::init()
+{
+    qDebug("%s", __func__);
+    // No.1
+    isConnect = false;
+    // 将状态设置为 断
+    ui->state_label->setText("断");
+    QPalette pa;
+    pa.setColor(QPalette::WindowText,Qt::red);
+    ui->state_label->setPalette(pa);
+
+    // 将按钮设置为　连接网络
+    ui->connect_pushButton->setText("连接网络");
+
+    // 使能远程端口，本地端口，远程IP
+    ui->remoteIP_lineEdit->setEnabled(true);
+    ui->remoteport_spinBox->setEnabled(true);
+    ui->localport_spinBox->setEnabled(true);
+    // 禁用button
+    ui->handSend_pushButton->setEnabled(false);
+    //
+    client.disconnectNet(NULL, NULL, NULL);
+
+    updateStateBar(tr("欢迎使用"), QVariant(QVariant::Int), QVariant(QVariant::Int));
+}
+
 /**
  * 断开UDP时调用该函数
  * @brief MainWindow::disConnectNet
