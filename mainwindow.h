@@ -11,9 +11,6 @@
 namespace Ui {
 class MainWindow;
 }
-static const QString REMOTE_IP = "115.28.220.246";
-//static const QString REMOTE_IP = "127.0.0.1";
-static const int REMOTE_PORT = 9930;
 
 class MainWindow : public QMainWindow
 {
@@ -61,7 +58,9 @@ private:
     /** 远程端口 */
     int mRemotePort;
     /** 本地端口 */
-    QString mLocalPort;
+    int mLocalPort;
+
+    void doSettings(bool isWrite);
 };
 
 #endif // MAINWINDOW_H

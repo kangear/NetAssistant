@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <QDate>
 #include "commonhelper.h"
+#include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -13,19 +14,22 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug("%s", __func__);
     ui->setupUi(this);
 
+    /* 读取配置文件 */
+    doSettings(false);
+
     /* 设置默认通讯模式 */
     ui->tcpclient_radioButton->setChecked(true);
     /** 目前设置为UDP为默认方式 */
     ui->udp_radioButton->setChecked(true);
     /** 设置远程主机IP地址 获取本机IP */
-    ui->remoteIP_lineEdit->setText(REMOTE_IP);
+    ui->remoteIP_lineEdit->setText(mRemoteIp);
     /* 设置远程端口号 */
     /* TODO: 将其设置为不能以0开头 */
     ui->remoteport_spinBox->setRange(1024,9999);
-    ui->remoteport_spinBox->setValue(1234);
+    ui->remoteport_spinBox->setValue(mRemotePort);
     /* 设置本地端口号 */
     ui->localport_spinBox->setRange(1024,9999);
-    ui->localport_spinBox->setValue(1024);
+    ui->localport_spinBox->setValue(mLocalPort);
 
     isConnect = false;
 
@@ -79,9 +83,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     disConnectNet();
 
-    QString qsting = chelper.getLocalHostIP().toString();
-    qDebug() << qsting;
-
     mReceiveNum = mSendNum = 0;
 }
 
@@ -91,6 +92,7 @@ void MainWindow::connectNet()
 
     mRemoteIp = ui->remoteIP_lineEdit->text();
     mRemotePort = ui->remoteport_spinBox->text().toInt();
+    mLocalPort = ui->localport_spinBox->text().toInt();
     updateStateBar("UDP通信 " + mRemoteIp + ":" + QString().number(mRemotePort),
                    QVariant(QVariant::Int), QVariant(QVariant::Int));
 
@@ -186,8 +188,26 @@ void MainWindow::disConnectNet()
     updateStateBar(tr("UDP通信停止"), QVariant(QVariant::Int), QVariant(QVariant::Int));
 }
 
+void MainWindow::doSettings(bool isWrite)
+{
+    QSettings settings("Yzs_think", "Application");
+    const QString REMOTE_IP = "remoteip";
+    const QString REMOTE_PORT = "remoteport";
+    const QString LOCAL_PORT = "localport";
+    if(isWrite) {
+        settings.setValue(REMOTE_IP, mRemoteIp);
+        settings.setValue(REMOTE_PORT, mRemotePort);
+        settings.setValue(LOCAL_PORT, mRemotePort);
+    } else {
+        mRemoteIp = settings.value(REMOTE_IP, chelper.getLocalHostIP().toString()).toString();
+        mRemotePort = settings.value(REMOTE_PORT, 1234).toInt();
+        mLocalPort = settings.value(LOCAL_PORT, 2468).toInt();
+    }
+}
+
 MainWindow::~MainWindow()
 {
+    doSettings(true);
     delete ui;
 }
 
