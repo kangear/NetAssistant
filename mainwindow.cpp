@@ -197,7 +197,7 @@ void MainWindow::doSettings(bool isWrite)
     if(isWrite) {
         settings.setValue(REMOTE_IP, mRemoteIp);
         settings.setValue(REMOTE_PORT, mRemotePort);
-        settings.setValue(LOCAL_PORT, mRemotePort);
+        settings.setValue(LOCAL_PORT, mLocalPort);
     } else {
         mRemoteIp = settings.value(REMOTE_IP, chelper.getLocalHostIP().toString()).toString();
         mRemotePort = settings.value(REMOTE_PORT, 1234).toInt();

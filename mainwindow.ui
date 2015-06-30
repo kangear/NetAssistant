@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>网络调试助手</string>
   </property>
   <property name="styleSheet">
    <string notr="true">border-color: rgb(170, 170, 255);</string>
@@ -139,10 +139,6 @@
        <string notr="true">background-color: rgb(255, 255, 255);</string>
       </property>
      </widget>
-     <zorder>widget_5</zorder>
-     <zorder>receive_textBrowser</zorder>
-     <zorder>frame</zorder>
-     <zorder>frame</zorder>
     </widget>
     <widget class="QWidget" name="widget_4" native="true">
      <property name="geometry">
@@ -445,8 +441,6 @@ border-color: rgb(58, 68, 255);</string>
               </item>
              </layout>
             </widget>
-            <zorder>layoutWidget</zorder>
-            <zorder>groupBox</zorder>
            </widget>
           </item>
           <item>
