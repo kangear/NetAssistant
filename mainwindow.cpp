@@ -113,8 +113,7 @@ void MainWindow::connectNet()
     // 使能button
     ui->handSend_pushButton->setEnabled(true);
 
-    client.connectNet(NULL, NULL, NULL);
-    client.udpListnerStart(chelper.getLocalHostIP(), mLocalPort);
+    client.udpStart(chelper.getLocalHostIP(), mLocalPort, QHostAddress(mRemoteIp), mRemotePort);
 }
 
 void MainWindow::updateReceiveText(const QString string)
@@ -184,9 +183,10 @@ void MainWindow::init()
     // 禁用button
     ui->handSend_pushButton->setEnabled(false);
     //
-    client.disconnectNet(NULL, NULL, NULL);
+    client.udpStop(NULL, NULL, NULL);
 
-    updateStateBar(tr("欢迎使用"), QVariant(QVariant::Int), QVariant(QVariant::Int));
+    updateStateBar("本地IP: " + chelper.getLocalHostIP().toString() + " 无连接",
+                   QVariant(QVariant::Int), QVariant(QVariant::Int));
 }
 
 /**
@@ -214,8 +214,8 @@ void MainWindow::disConnectNet()
     // 禁用button
     ui->handSend_pushButton->setEnabled(false);
     //
-    client.disconnectNet(NULL, NULL, NULL);
-    client.udpListnerStop();
+    client.udpStop(NULL, NULL, NULL);
+
 
     updateStateBar(tr("UDP通信停止"), QVariant(QVariant::Int), QVariant(QVariant::Int));
 }

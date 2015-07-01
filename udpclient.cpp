@@ -5,11 +5,6 @@ UDPClient::UDPClient(QObject *parent) :
     QObject(parent)
 {
     qDebug("%s", __func__);
-    udpSendSocket = NULL;
-    // 这里一定不要时行bind，否则会造成数据发不到外网去
-//    if(!socket->bind(QHostAddress::LocalHost, 1234)) {
-//        qWarning("NULL");
-//    }
 }
 
 /**
@@ -45,7 +40,7 @@ void UDPClient::connection_error(QAbstractSocket::SocketError err)
 void UDPClient::sendData(const QString string, const QString remoteIp, const int port)
 {
     qDebug("%s %d", __func__, __LINE__);
-    if(udpSendSocket == NULL)
+    if(udpSendSocket == nullptr)
         return;
     qDebug("%s %d", __func__, __LINE__);
     QByteArray Data;
@@ -53,6 +48,11 @@ void UDPClient::sendData(const QString string, const QString remoteIp, const int
     emit updateState(QString(), QVariant(QVariant::Int), udpSendSocket->writeDatagram(Data, QHostAddress(remoteIp), port));
 }
 
+/**
+ * @brief UDPClient::udpListnerStart
+ * @param ip    监听IP地址
+ * @param port  监听端口号
+ */
 void UDPClient::udpListnerStart(const QHostAddress ip, const int port)
 {
     qDebug("%s", __func__);
@@ -64,37 +64,76 @@ void UDPClient::udpListnerStart(const QHostAddress ip, const int port)
     connect(udpListnerSocket, SIGNAL(error(QAbstractSocket::SocketError)),this,SLOT(connection_error(QAbstractSocket::SocketError)));
 }
 
+/**
+ * @brief UDPClient::udpListnerStop
+ * 停止监听
+ */
 void UDPClient::udpListnerStop()
 {
     qDebug("%s", __func__);
-    udpListnerSocket->close();
+    if(udpListnerSocket != nullptr) {
+        udpListnerSocket->close();
+        udpListnerSocket = nullptr;
+    }
 }
 
-void UDPClient::connectNet(const QString string, const QString remoteIp, const int port)
+/**
+ * @brief UDPClient::udpStart
+ * @param localIp
+ * @param listnerPort
+ * @param remoteIp
+ * @param remotePort
+ * 启动UDP服务
+ */
+void UDPClient::udpStart(const QHostAddress localIp, const int listnerPort, const QHostAddress remoteIp, const int remotePort)
 {
     qDebug("%s", __func__);
-    if(udpSendSocket == NULL) {
+    // 开启发送
+    if(udpSendSocket == nullptr) {
         udpSendSocket = new QUdpSocket(this);
         connect(udpSendSocket, SIGNAL(readyRead()), this, SLOT(readySendRead()));
         connect(udpSendSocket, SIGNAL(error(QAbstractSocket::SocketError)),this,SLOT(connection_error(QAbstractSocket::SocketError)));
     }
+
+    // 开启接收Socket
+    udpListnerStart(localIp, listnerPort);
 }
 
-void UDPClient::disconnectNet(const QString string, const QString remoteIp, const int port)
+/**
+ * @brief UDPClient::udpStop
+ * @param string
+ * @param remoteIp
+ * @param port
+ * 停止UDP服务
+ */
+void UDPClient::udpStop(const QString string, const QString remoteIp, const int port)
 {
     qDebug("%s", __func__);
-    if(udpSendSocket != NULL) {
+    // 关闭发送Socket
+    if(udpSendSocket != nullptr) {
         udpSendSocket->close();
-        udpSendSocket = NULL;
+        udpSendSocket = nullptr;
     }
+
+    // 关闭Listner
+    udpListnerStop();
 }
 
+/**
+ * @brief UDPClient::readyListnerRead
+ * 监听读到数据
+ */
 void UDPClient::readyListnerRead()
 {
     qDebug("%s", __func__);
     readyRead(udpListnerSocket);
 }
 
+/**
+ * @brief UDPClient::readyRead
+ * @param socket
+ * 读取数据
+ */
 void UDPClient::readyRead(QUdpSocket* socket)
 {
     qDebug("%s", __func__);
@@ -112,6 +151,10 @@ void UDPClient::readyRead(QUdpSocket* socket)
     emit updateState(QString(), Buffer.size(), QVariant(QVariant::Int));
 }
 
+/**
+ * @brief UDPClient::readySendRead
+ * 发送得到回传数据
+ */
 void UDPClient::readySendRead()
 {
     qDebug("%s", __func__);
