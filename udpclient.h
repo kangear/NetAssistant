@@ -12,14 +12,20 @@ public:
     void sendData(const QString string, const QString remoteIp, const int port);
     void connectNet(const QString string, const QString remoteIp, const int port);
     void disconnectNet(const QString string, const QString remoteIp, const int port);
+    void udpListnerStart(const QHostAddress ip, const int port);
+    void udpListnerStop();
+    void readyRead(QUdpSocket* socket);
+
 signals:
     void valueChanged(QString newValue);
     void updateState(QString state, QVariant inNum, QVariant outNum);
 public slots:
-    void readyRead();
+    void readyListnerRead();
+    void readySendRead();
     void connection_error(QAbstractSocket::SocketError err);
 private:
-    QUdpSocket *socket;
+    QUdpSocket *udpSendSocket;
+    QUdpSocket *udpListnerSocket;
 };
 
 #endif // UDPCLIENT_H

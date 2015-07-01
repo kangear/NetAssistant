@@ -114,6 +114,7 @@ void MainWindow::connectNet()
     ui->handSend_pushButton->setEnabled(true);
 
     client.connectNet(NULL, NULL, NULL);
+    client.udpListnerStart(chelper.getLocalHostIP(), mLocalPort);
 }
 
 void MainWindow::updateReceiveText(const QString string)
@@ -214,6 +215,7 @@ void MainWindow::disConnectNet()
     ui->handSend_pushButton->setEnabled(false);
     //
     client.disconnectNet(NULL, NULL, NULL);
+    client.udpListnerStop();
 
     updateStateBar(tr("UDP通信停止"), QVariant(QVariant::Int), QVariant(QVariant::Int));
 }
